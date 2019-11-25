@@ -7,26 +7,29 @@
 
 // 7E 00 04 08 01 49 4D 60 msg to get imei
 
-#define F_CPU 8000000UL
+#define F_CPU 16000000UL
 #include "USART.h"
+#include "xbee.h"
+#include "RN2483A.h"
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "xbee.h"
-#include "util_functions.h"
+
 
 
 int main(void){
-	
+	DDRD |= (1<<PD3);
 	USART_init();
-	char msg[] = "7E00040801494D60";
+	USART_init2();
+	//lora_init();
     while (1) 
     {
-		XBEE_send_command(msg);
-		 _delay_ms(100);
+		lora_send_command("sys get hweui");
+		//lora_receive_response();
+		 _delay_ms(500);
     }
 	return 0;
 }

@@ -7,8 +7,8 @@
 
 
 
-
-void XBEE_send_command(char * str);
+void XBEE_receive_response();
+void XBEE_send_command(const char * str);
 
 struct AT_CMD{
 	uint8_t start;

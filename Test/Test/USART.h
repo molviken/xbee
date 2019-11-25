@@ -12,3 +12,7 @@ unsigned char USART_receive(void);
 void USART_putstring(char *string);
 
 int USART_TRANSMIT_printf(char var, FILE *stream);
+
+void USART_init2();
+void USART_transmit2( uint8_t data );
+void  USART_putstring2(char *string);

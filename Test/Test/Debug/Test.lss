@@ -3,31 +3,31 @@ Test.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000020  00800100  000001b6  0000024a  2**0
+  0 .data         0000001c  00800100  000001f0  00000284  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000001b6  00000000  00000000  00000094  2**1
+  1 .text         000001f0  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000006  00800120  00800120  0000026a  2**0
+  2 .bss          00000006  0080011c  0080011c  000002a0  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  0000026a  2**0
+  3 .comment      00000030  00000000  00000000  000002a0  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  0000029c  2**2
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000002d0  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000088  00000000  00000000  000002dc  2**0
+  5 .debug_aranges 000000b8  00000000  00000000  00000310  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   0000108d  00000000  00000000  00000364  2**0
+  6 .debug_info   0000115c  00000000  00000000  000003c8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000deb  00000000  00000000  000013f1  2**0
+  7 .debug_abbrev 00000d65  00000000  00000000  00001524  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000623  00000000  00000000  000021dc  2**0
+  8 .debug_line   00000652  00000000  00000000  00002289  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000000f4  00000000  00000000  00002800  2**2
+  9 .debug_frame  00000158  00000000  00000000  000028dc  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000005f0  00000000  00000000  000028f4  2**0
+ 10 .debug_str    00000660  00000000  00000000  00002a34  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000235  00000000  00000000  00002ee4  2**0
+ 11 .debug_loc    00000257  00000000  00000000  00003094  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000058  00000000  00000000  00003119  2**0
+ 12 .debug_ranges 00000088  00000000  00000000  000032eb  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -97,18 +97,18 @@ Disassembly of section .text:
   d8:	11 e0       	ldi	r17, 0x01	; 1
   da:	a0 e0       	ldi	r26, 0x00	; 0
   dc:	b1 e0       	ldi	r27, 0x01	; 1
-  de:	e6 eb       	ldi	r30, 0xB6	; 182
+  de:	e0 ef       	ldi	r30, 0xF0	; 240
   e0:	f1 e0       	ldi	r31, 0x01	; 1
   e2:	02 c0       	rjmp	.+4      	; 0xe8 <__do_copy_data+0x10>
   e4:	05 90       	lpm	r0, Z+
   e6:	0d 92       	st	X+, r0
-  e8:	a0 32       	cpi	r26, 0x20	; 32
+  e8:	ac 31       	cpi	r26, 0x1C	; 28
   ea:	b1 07       	cpc	r27, r17
   ec:	d9 f7       	brne	.-10     	; 0xe4 <__do_copy_data+0xc>
 
 000000ee <__do_clear_bss>:
   ee:	21 e0       	ldi	r18, 0x01	; 1
-  f0:	a0 e2       	ldi	r26, 0x20	; 32
+  f0:	ac e1       	ldi	r26, 0x1C	; 28
   f2:	b1 e0       	ldi	r27, 0x01	; 1
   f4:	01 c0       	rjmp	.+2      	; 0xf8 <.do_clear_bss_start>
 
@@ -116,139 +116,212 @@ Disassembly of section .text:
   f6:	1d 92       	st	X+, r1
 
 000000f8 <.do_clear_bss_start>:
-  f8:	a6 32       	cpi	r26, 0x26	; 38
+  f8:	a2 32       	cpi	r26, 0x22	; 34
   fa:	b2 07       	cpc	r27, r18
   fc:	e1 f7       	brne	.-8      	; 0xf6 <.do_clear_bss_loop>
-  fe:	0e 94 af 00 	call	0x15e	; 0x15e <main>
- 102:	0c 94 d9 00 	jmp	0x1b2	; 0x1b2 <_exit>
+  fe:	0e 94 e3 00 	call	0x1c6	; 0x1c6 <main>
+ 102:	0c 94 f6 00 	jmp	0x1ec	; 0x1ec <_exit>
 
 00000106 <__bad_interrupt>:
  106:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
-0000010a <USART_transmit>:
+0000010a <lora_send_command>:
+
+
+
+
+void lora_send_command(char * cmd){
+	USART_putstring(cmd);
+ 10a:	0e 94 96 00 	call	0x12c	; 0x12c <USART_putstring>
+	USART_transmit(0x0D);
+ 10e:	8d e0       	ldi	r24, 0x0D	; 13
+ 110:	0e 94 8e 00 	call	0x11c	; 0x11c <USART_transmit>
+	USART_transmit(0x0A);
+ 114:	8a e0       	ldi	r24, 0x0A	; 10
+ 116:	0e 94 8e 00 	call	0x11c	; 0x11c <USART_transmit>
+ 11a:	08 95       	ret
+
+0000011c <USART_transmit>:
+	return UDR0;
+}
+
+void  USART_transmit( uint8_t data ){
+	/* Wait for empty transmit buffer:*/
+	while ( !( UCSR0A & (1<<UDRE)));
+ 11c:	e0 ec       	ldi	r30, 0xC0	; 192
+ 11e:	f0 e0       	ldi	r31, 0x00	; 0
+ 120:	90 81       	ld	r25, Z
+ 122:	95 ff       	sbrs	r25, 5
+ 124:	fd cf       	rjmp	.-6      	; 0x120 <USART_transmit+0x4>
+	/* Put data into buffer:*/
+	UDR0 = data;
+ 126:	80 93 c6 00 	sts	0x00C6, r24	; 0x8000c6 <__TEXT_REGION_LENGTH__+0x7e00c6>
+ 12a:	08 95       	ret
+
+0000012c <USART_putstring>:
+}
+
+void  USART_putstring(char *string){
+ 12c:	cf 93       	push	r28
+ 12e:	df 93       	push	r29
+ 130:	ec 01       	movw	r28, r24
+	for(; *string; ++string){
+ 132:	88 81       	ld	r24, Y
+ 134:	88 23       	and	r24, r24
+ 136:	31 f0       	breq	.+12     	; 0x144 <USART_putstring+0x18>
+ 138:	21 96       	adiw	r28, 0x01	; 1
+		USART_transmit(*string);
+ 13a:	0e 94 8e 00 	call	0x11c	; 0x11c <USART_transmit>
+	/* Put data into buffer:*/
+	UDR0 = data;
+}
 
 void  USART_putstring(char *string){
 	for(; *string; ++string){
+ 13e:	89 91       	ld	r24, Y+
+ 140:	81 11       	cpse	r24, r1
+ 142:	fb cf       	rjmp	.-10     	; 0x13a <USART_putstring+0xe>
 		USART_transmit(*string);
 	}
 }
- 10a:	e0 ec       	ldi	r30, 0xC0	; 192
- 10c:	f0 e0       	ldi	r31, 0x00	; 0
- 10e:	90 81       	ld	r25, Z
- 110:	95 ff       	sbrs	r25, 5
- 112:	fd cf       	rjmp	.-6      	; 0x10e <USART_transmit+0x4>
- 114:	80 93 c6 00 	sts	0x00C6, r24	; 0x8000c6 <__TEXT_REGION_LENGTH__+0x7e00c6>
- 118:	08 95       	ret
+ 144:	df 91       	pop	r29
+ 146:	cf 91       	pop	r28
+ 148:	08 95       	ret
 
-0000011a <USART_TRANSMIT_printf>:
- 11a:	cf 93       	push	r28
- 11c:	c8 2f       	mov	r28, r24
- 11e:	8a 30       	cpi	r24, 0x0A	; 10
- 120:	19 f4       	brne	.+6      	; 0x128 <USART_TRANSMIT_printf+0xe>
- 122:	8d e0       	ldi	r24, 0x0D	; 13
- 124:	0e 94 85 00 	call	0x10a	; 0x10a <USART_transmit>
- 128:	8c 2f       	mov	r24, r28
- 12a:	0e 94 85 00 	call	0x10a	; 0x10a <USART_transmit>
- 12e:	80 e0       	ldi	r24, 0x00	; 0
- 130:	90 e0       	ldi	r25, 0x00	; 0
- 132:	cf 91       	pop	r28
- 134:	08 95       	ret
-
-00000136 <USART_init>:
+0000014a <USART_init>:
+}
 void USART_init(){
 	// Calculate ubbr:
 	unsigned int ubrr =(F_CPU / (16*DEBUG_BAUD))-1U;
 	/*Set baud rate */
 	UBRR0H = (unsigned char)(ubrr>>8);
- 136:	10 92 c5 00 	sts	0x00C5, r1	; 0x8000c5 <__TEXT_REGION_LENGTH__+0x7e00c5>
+ 14a:	10 92 c5 00 	sts	0x00C5, r1	; 0x8000c5 <__TEXT_REGION_LENGTH__+0x7e00c5>
 	UBRR0L = (unsigned char)ubrr;
- 13a:	83 e3       	ldi	r24, 0x33	; 51
- 13c:	80 93 c4 00 	sts	0x00C4, r24	; 0x8000c4 <__TEXT_REGION_LENGTH__+0x7e00c4>
+ 14e:	80 e1       	ldi	r24, 0x10	; 16
+ 150:	80 93 c4 00 	sts	0x00C4, r24	; 0x8000c4 <__TEXT_REGION_LENGTH__+0x7e00c4>
 	/* Enable receiver and transmitter */
 	UCSR0B = (1<<RXEN)|(1<<TXEN);
- 140:	88 e1       	ldi	r24, 0x18	; 24
- 142:	80 93 c1 00 	sts	0x00C1, r24	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7e00c1>
-	UCSR0C |= (1<<USBS)|(3<<UCSZ0);	/* Set frame format:  2stop bit, 8data*/
- 146:	e2 ec       	ldi	r30, 0xC2	; 194
- 148:	f0 e0       	ldi	r31, 0x00	; 0
- 14a:	80 81       	ld	r24, Z
- 14c:	8e 60       	ori	r24, 0x0E	; 14
- 14e:	80 83       	st	Z, r24
+ 154:	88 e1       	ldi	r24, 0x18	; 24
+ 156:	80 93 c1 00 	sts	0x00C1, r24	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7e00c1>
+	UCSR0C |= (3<<UCSZ0);	/* Set frame format:  1stop bit, 8data*/
+ 15a:	e2 ec       	ldi	r30, 0xC2	; 194
+ 15c:	f0 e0       	ldi	r31, 0x00	; 0
+ 15e:	80 81       	ld	r24, Z
+ 160:	86 60       	ori	r24, 0x06	; 6
+ 162:	80 83       	st	Z, r24
 	stdout = &mystdout;
- 150:	80 e0       	ldi	r24, 0x00	; 0
- 152:	91 e0       	ldi	r25, 0x01	; 1
- 154:	90 93 23 01 	sts	0x0123, r25	; 0x800123 <__data_end+0x3>
- 158:	80 93 22 01 	sts	0x0122, r24	; 0x800122 <__data_end+0x2>
- 15c:	08 95       	ret
+ 164:	80 e0       	ldi	r24, 0x00	; 0
+ 166:	91 e0       	ldi	r25, 0x01	; 1
+ 168:	90 93 1f 01 	sts	0x011F, r25	; 0x80011f <__data_end+0x3>
+ 16c:	80 93 1e 01 	sts	0x011E, r24	; 0x80011e <__data_end+0x2>
+ 170:	08 95       	ret
 
-0000015e <main>:
+00000172 <USART_init2>:
+}
+void USART_init2(){
+	// Calculate ubbr:
+	unsigned int ubrr =(F_CPU / (16*DEBUG_BAUD))-1U;
+	/*Set baud rate */
+	UBRR2H = (unsigned char)(ubrr>>8);
+ 172:	10 92 d5 00 	sts	0x00D5, r1	; 0x8000d5 <__TEXT_REGION_LENGTH__+0x7e00d5>
+	UBRR2L = (unsigned char)ubrr;
+ 176:	80 e1       	ldi	r24, 0x10	; 16
+ 178:	80 93 d4 00 	sts	0x00D4, r24	; 0x8000d4 <__TEXT_REGION_LENGTH__+0x7e00d4>
+	/* Enable receiver and transmitter */
+	UCSR2B = (1<<RXEN)|(1<<TXEN);
+ 17c:	88 e1       	ldi	r24, 0x18	; 24
+ 17e:	80 93 d1 00 	sts	0x00D1, r24	; 0x8000d1 <__TEXT_REGION_LENGTH__+0x7e00d1>
+	UCSR2C |= (3<<UCSZ0);	/* Set frame format:  1stop bit, 8data*/
+ 182:	e2 ed       	ldi	r30, 0xD2	; 210
+ 184:	f0 e0       	ldi	r31, 0x00	; 0
+ 186:	80 81       	ld	r24, Z
+ 188:	86 60       	ori	r24, 0x06	; 6
+ 18a:	80 83       	st	Z, r24
+	stdout = &mystdout;
+ 18c:	80 e0       	ldi	r24, 0x00	; 0
+ 18e:	91 e0       	ldi	r25, 0x01	; 1
+ 190:	90 93 1f 01 	sts	0x011F, r25	; 0x80011f <__data_end+0x3>
+ 194:	80 93 1e 01 	sts	0x011E, r24	; 0x80011e <__data_end+0x2>
+ 198:	08 95       	ret
 
-#include "xbee.h"
-#include "util_functions.h"
+0000019a <USART_transmit2>:
+}
+void  USART_transmit2( uint8_t data ){
+	/* Wait for empty transmit buffer:*/
+	while ( !( UCSR2A & (1<<UDRE)));
+ 19a:	e0 ed       	ldi	r30, 0xD0	; 208
+ 19c:	f0 e0       	ldi	r31, 0x00	; 0
+ 19e:	90 81       	ld	r25, Z
+ 1a0:	95 ff       	sbrs	r25, 5
+ 1a2:	fd cf       	rjmp	.-6      	; 0x19e <USART_transmit2+0x4>
+	/* Put data into buffer:*/
+	UDR2 = data;
+ 1a4:	80 93 d6 00 	sts	0x00D6, r24	; 0x8000d6 <__TEXT_REGION_LENGTH__+0x7e00d6>
+ 1a8:	08 95       	ret
+
+000001aa <USART_TRANSMIT_printf>:
+#endif
+#ifndef DEBUG_BAUD
+	#define DEBUG_BAUD 57600UL
+#endif
+
+int USART_TRANSMIT_printf(char var, FILE *stream) {
+ 1aa:	cf 93       	push	r28
+ 1ac:	c8 2f       	mov	r28, r24
+	// translate \n to \r for br@y++ terminal
+	if (var == '\n') USART_transmit2('\r');
+ 1ae:	8a 30       	cpi	r24, 0x0A	; 10
+ 1b0:	19 f4       	brne	.+6      	; 0x1b8 <USART_TRANSMIT_printf+0xe>
+ 1b2:	8d e0       	ldi	r24, 0x0D	; 13
+ 1b4:	0e 94 cd 00 	call	0x19a	; 0x19a <USART_transmit2>
+	USART_transmit2(var);
+ 1b8:	8c 2f       	mov	r24, r28
+ 1ba:	0e 94 cd 00 	call	0x19a	; 0x19a <USART_transmit2>
+	return 0;
+}
+ 1be:	80 e0       	ldi	r24, 0x00	; 0
+ 1c0:	90 e0       	ldi	r25, 0x00	; 0
+ 1c2:	cf 91       	pop	r28
+ 1c4:	08 95       	ret
+
+000001c6 <main>:
+
+
 
 
 int main(void){
- 15e:	cf 93       	push	r28
- 160:	df 93       	push	r29
- 162:	cd b7       	in	r28, 0x3d	; 61
- 164:	de b7       	in	r29, 0x3e	; 62
- 166:	61 97       	sbiw	r28, 0x11	; 17
- 168:	0f b6       	in	r0, 0x3f	; 63
- 16a:	f8 94       	cli
- 16c:	de bf       	out	0x3e, r29	; 62
- 16e:	0f be       	out	0x3f, r0	; 63
- 170:	cd bf       	out	0x3d, r28	; 61
-	
+	DDRD |= (1<<PD3);
+ 1c6:	53 9a       	sbi	0x0a, 3	; 10
 	USART_init();
- 172:	0e 94 9b 00 	call	0x136	; 0x136 <USART_init>
-	char msg[] = "7E00040801494D60";
- 176:	81 e1       	ldi	r24, 0x11	; 17
- 178:	ee e0       	ldi	r30, 0x0E	; 14
- 17a:	f1 e0       	ldi	r31, 0x01	; 1
- 17c:	de 01       	movw	r26, r28
- 17e:	11 96       	adiw	r26, 0x01	; 1
- 180:	01 90       	ld	r0, Z+
- 182:	0d 92       	st	X+, r0
- 184:	8a 95       	dec	r24
- 186:	e1 f7       	brne	.-8      	; 0x180 <main+0x22>
+ 1c8:	0e 94 a5 00 	call	0x14a	; 0x14a <USART_init>
+	USART_init2();
+ 1cc:	0e 94 b9 00 	call	0x172	; 0x172 <USART_init2>
+	//lora_init();
     while (1) 
     {
-		XBEE_send_command(msg);
- 188:	ce 01       	movw	r24, r28
- 18a:	01 96       	adiw	r24, 0x01	; 1
- 18c:	0e 94 d2 00 	call	0x1a4	; 0x1a4 <XBEE_send_command>
+		lora_send_command("sys get hweui");
+ 1d0:	8e e0       	ldi	r24, 0x0E	; 14
+ 1d2:	91 e0       	ldi	r25, 0x01	; 1
+ 1d4:	0e 94 85 00 	call	0x10a	; 0x10a <lora_send_command>
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
- 190:	2f ef       	ldi	r18, 0xFF	; 255
- 192:	80 e7       	ldi	r24, 0x70	; 112
- 194:	92 e0       	ldi	r25, 0x02	; 2
- 196:	21 50       	subi	r18, 0x01	; 1
- 198:	80 40       	sbci	r24, 0x00	; 0
- 19a:	90 40       	sbci	r25, 0x00	; 0
- 19c:	e1 f7       	brne	.-8      	; 0x196 <main+0x38>
- 19e:	00 c0       	rjmp	.+0      	; 0x1a0 <main+0x42>
- 1a0:	00 00       	nop
- 1a2:	f2 cf       	rjmp	.-28     	; 0x188 <main+0x2a>
+ 1d8:	2f ef       	ldi	r18, 0xFF	; 255
+ 1da:	89 e6       	ldi	r24, 0x69	; 105
+ 1dc:	98 e1       	ldi	r25, 0x18	; 24
+ 1de:	21 50       	subi	r18, 0x01	; 1
+ 1e0:	80 40       	sbci	r24, 0x00	; 0
+ 1e2:	90 40       	sbci	r25, 0x00	; 0
+ 1e4:	e1 f7       	brne	.-8      	; 0x1de <main+0x18>
+ 1e6:	00 c0       	rjmp	.+0      	; 0x1e8 <main+0x22>
+ 1e8:	00 00       	nop
+ 1ea:	f2 cf       	rjmp	.-28     	; 0x1d0 <main+0xa>
 
-000001a4 <XBEE_send_command>:
+000001ec <_exit>:
+ 1ec:	f8 94       	cli
 
-void XBEE_send_command(char * str){
-	int str_len = sizeof(str)/sizeof(str[0]);
-	uint8_t cmd[str_len];
-	for (int i = 0; i<str_len; i++){
-		USART_transmit(cmd[i]);
- 1a4:	80 e0       	ldi	r24, 0x00	; 0
- 1a6:	0e 94 85 00 	call	0x10a	; 0x10a <USART_transmit>
- 1aa:	80 e0       	ldi	r24, 0x00	; 0
- 1ac:	0e 94 85 00 	call	0x10a	; 0x10a <USART_transmit>
- 1b0:	08 95       	ret
-
-000001b2 <_exit>:
- 1b2:	f8 94       	cli
-
-000001b4 <__stop_program>:
- 1b4:	ff cf       	rjmp	.-2      	; 0x1b4 <__stop_program>
+000001ee <__stop_program>:
+ 1ee:	ff cf       	rjmp	.-2      	; 0x1ee <__stop_program>
